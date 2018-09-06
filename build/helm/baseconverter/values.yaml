@@ -1,0 +1,24 @@
+# Default values for baseconverter.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+nameOverride: ""
+fullnameOverride: ""
+
+deployment:
+  image:
+    repository: chtison/baseconverter
+    tag: 1
+    pullPolicy: IfNotPresent
+  port: 51966
+  replicaCount: 1
+  automountServiceAccountToken: false
+  resources: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+service:
+  type: ClusterIP
+  # loadBalancerIP: 1.2.3.4
+  port: 51966

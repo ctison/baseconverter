@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "baseconverter.fullname" . }}
+  labels:
+    app: {{ include "baseconverter.name" . }}
+    chart: {{ include "baseconverter.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+{{- with .Values.service.loadBalancerIP }}
+  loadBalancerIP: {{ . }}
+{{- end }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.deployment.port }}
+  selector:
+    app: {{ include "baseconverter.name" . }}
+    release: {{ .Release.Name }}

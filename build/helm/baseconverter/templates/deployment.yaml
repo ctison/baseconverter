@@ -1,0 +1,54 @@
+{{- $deploy := .Values.deployment -}}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "baseconverter.fullname" . }}
+  labels:
+    app: {{ include "baseconverter.name" . }}
+    chart: {{ include "baseconverter.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "baseconverter.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "baseconverter.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      automountServiceAccountToken: {{ $deploy.automountServiceAccountToken }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ $deploy.image.repository }}:{{ $deploy.image.tag }}"
+          imagePullPolicy: {{ $deploy.image.pullPolicy }}
+          command:
+            - baseconverter
+            - serve
+            - '--address=:{{ $deploy.port }}'
+          ports:
+            - containerPort: {{ $deploy.port }}
+          livenessProbe:
+            tcpSocket:
+              port: {{ $deploy.port }}
+          readinessProbe:
+            tcpSocket:
+              port: {{ $deploy.port }}
+          resources:
+{{ toYaml $deploy.resources | indent 12 }}
+    {{- with $deploy.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with $deploy.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with $deploy.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
