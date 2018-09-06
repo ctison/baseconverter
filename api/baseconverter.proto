@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package baseconverter_grpc;
+
+service BaseConverterService {
+	rpc Convert (BaseConverterRequest) returns (BaseConverterReply) {}
+}
+
+message BaseConverterRequest {
+	string number = 1;
+	string inBase = 2;
+	string toBase = 3;
+}
+message BaseConverterReply {
+	string result = 1;
+	string errorInBase = 2;
+	string errorToBase = 3;
+}
