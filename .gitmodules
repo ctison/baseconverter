@@ -1,0 +1,4 @@
+[submodule "build/docker/makefile-docker"]
+	path = build/docker/makefile-docker
+	url = https://github.com/chtison/makefile-docker
+	branch = v2-dev
