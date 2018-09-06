@@ -1,0 +1,40 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: baseconverter
+spec:
+  selector:
+    matchLabels:
+      app: baseconverter
+  template:
+    metadata:
+      labels:
+        app: baseconverter
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: baseconverter
+          image: chtison/baseconverter:1
+          command:
+            - baseconverter
+            - serve
+            - '--address=:51966'
+          ports:
+            - containerPort: 51966
+          livenessProbe:
+            tcpSocket:
+              port: 51966
+          readinessProbe:
+            tcpSocket:
+              port: 51966
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: baseconverter
+spec:
+  type: ClusterIP
+  ports:
+    - port: 51966
+      targetPort: 51966
