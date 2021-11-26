@@ -1,0 +1,4 @@
+{
+  "$schema": "https://github.com/SchemaStore/schemastore/raw/master/src/schemas/json/renovate.json",
+  "extends": ["github>ctison/renovate"]
+}
